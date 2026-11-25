@@ -1,42 +1,33 @@
-#!/usr/bin/env python3
-"""make.fun bounty: Sum up 24 November's world news in one image.
+"""Entry for make.fun bounty news-image-20261124.
 
-Entry for https://make.fun/bounty/news-image-20261124
-($100, 50 places; ends Thu 2026-11-26 00:00 UTC / 08:00 CST).
+"Sum up 24 November's world news in one image": the program writes one
+image of the day's news to /output/entry.png. The prize pool is $100
+shared by the 50 best entries, and entries close at 2026-11-26 00:00 UTC.
 
-The image is entry.png beside this file: a 1024x1024 newspaper front
-page for Tuesday 24 November 2026 ("THE WORLD IN ONE PAGE"). It was
-drawn by a build script kept outside this repository, then
-saved as entry.png. This program itself uses only the Python standard
-library, as the grader requires: it copies entry.png to
-/output/entry.png, byte for byte, so two runs write identical bytes.
+The image itself lives in this repository as entry.png, a newspaper front
+page for Tuesday 24 November 2026. This program does nothing clever: it
+copies that file, byte for byte, to the output directory. Copying keeps
+the result identical on every run, which is exactly what the bounty asks
+for -- the program runs twice and both runs must write the same bytes.
+A plain file copy is deterministic by construction: the same input bytes
+go in, the same output bytes come out, with no drawing, no timestamps
+and no random choices anywhere in between.
 
-Stories on the page (24 Nov 2026):
-- Ukraine says sea drones sank the Russian corvette Merkury at
-  Benghazi naval base, Libya; the UN seeks a probe.
-- 14 nations back the ICJ Rohingya genocide ruling against Myanmar.
-- A 5.6-magnitude earthquake strikes Nepal near the Chinese border.
-- Russia tests NATO's Article 5 with airspace violations; missiles
-  and a drone fell in Poland on Nov 20.
-- Nikkei rallies on the Japan-US trade deal; SK hynix jumps 20% as
-  Nvidia reinstates Jensen Huang.
-- Israeli strikes in Gaza kill at least three, including an UNRWA
-  worker.
-- Washington Commanders beat the Cincinnati Bengals 22-20 on a
-  last-second field goal on Monday Night Football.
+Standard library only: os to find the output directory, shutil to copy.
+No network, no clock, no randomness, nothing to install.
 """
+
 import os
 import shutil
 
-OUT_DIR = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
-OUT = os.path.join(OUT_DIR, "entry.png")
-SRC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "entry.png")
+HERE = os.path.dirname(os.path.abspath(__file__))
+SOURCE = os.path.join(HERE, "entry.png")
 
 
 def main():
-    # Copy, don't re-render: the bytes in entry.png are the entry.
-    os.makedirs(OUT_DIR, exist_ok=True)
-    shutil.copyfile(SRC, OUT)
+    out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR") or "/output"
+    os.makedirs(out_dir, exist_ok=True)
+    shutil.copyfile(SOURCE, os.path.join(out_dir, "entry.png"))
 
 
 if __name__ == "__main__":
